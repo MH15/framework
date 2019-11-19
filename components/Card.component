@@ -4,7 +4,7 @@
         we will be proactively transforming every game changer in our space. Efficiencies will come from dynamically
         right-sizing our visibilities.</p>
     <%- include("Button", {user: user}); %>
-    <%- include('ProfilePic', {user: user}); %>
+    <%- include('ProfilePicture', {user: user}); %>
 </template>
 
 <style>

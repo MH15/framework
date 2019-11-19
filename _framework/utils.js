@@ -16,6 +16,7 @@ module.exports = {
 const fs = require('fs')
 const md5 = require('md5')
 const ejs = require('ejs')
+const path = require('path')
 const DomParser = require('dom-parser')
 const parser = new DomParser()
 
@@ -30,16 +31,39 @@ function ejsFancy(filepath, template) {
     // let html = ejs.render(raw, {});
     // console.log("yer")
     // console.log(html)
-    let s = raw.replace(/<%-(.*?)%>/g, (capturingGroup) => {
-        let path = capturingGroup.replace(/\s/g, '').match(/['"](.*?)['"]/g)[0].replace(/['"']/g, "")
-        console.log(path)
-        resolveComponentReferences(path)
-        return "dog"
-    })
+    // let s = raw.replace(/<%-(.*?)%>/g, (capturingGroup) => {
+    //     let captured = capturingGroup.replace(/\s/g, '').match(/['"](.*?)['"]/g)[0].replace(/['"']/g, "")
+    //     // console.log("captured: " + captured)
+    //     let resolved = resolveComponentReferences(captured)
+    //     // console.log("resolved: " + resolved)
+    //     let final = capturingGroup.replace(/['"](.*?)['"]/, "'" + resolved + "'")
+    //     return final
+    // })
 
-    console.log(s)
+
+    // let html = ejs.render(s, { user: "bitch" })\
+
+    let testString = raw, fn = ejs.compile(testString, { client: true });
+
+    let html = fn({ user: "bitch" }, null, function (p, d) { // include callback
+        // path -> 'file'
+        // d -> {person: 'John'}
+        // Put your code here
+        // Return the contents of file as a string
+        console.log("d: " + d)
+        let truePath = path.join(__dirname, "..", findCompiledComponent(p))
+        console.log("path: " + truePath)
+        return readFile(truePath)
+    }); // returns rendered string
+
+    console.log(html)
+    writeFile(path.parse(filepath).dir + "/index.html", html)
 }
 
+
+function findCompiledComponent(name) {
+    return path.join("_build", "components", name, "index.ejs")
+}
 
 
 /**
@@ -49,6 +73,39 @@ function ejsFancy(filepath, template) {
 function resolveComponentReferences(name) {
     console.log("Component to find: " + name)
     // TODO: search in /components to find a component name
+    let pathToSearch = path.join(__dirname, "..", "_build", "components")
+    // console.log(__dirname)
+    // console.log(pathToSearch)
+    let possiblePaths = walk(pathToSearch)
+    let truePath = ""
+    possiblePaths.forEach(p => {
+        // console.log(path.parse(p))
+        if (path.parse(p).name === name) {
+            truePath = "components/" + path.parse(p).base
+        }
+    })
+    if (truePath.length === 0) {
+        throw new Error("That's not a valid path name")
+    }
+    return truePath
+
+}
+
+var walk = function (dir) {
+    var results = [];
+    var list = fs.readdirSync(dir);
+    list.forEach(function (file) {
+        filePath = dir + '/' + file;
+        var stat = fs.statSync(filePath);
+        if (stat && stat.isDirectory()) {
+            /* Recurse into a subdirectory */
+            results = results.concat(walk(filePath));
+        } else {
+            /* Is a file */
+            results.push(file);
+        }
+    });
+    return results;
 }
 
 

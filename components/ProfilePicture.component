@@ -1,4 +1,6 @@
-<template></template>
+<template>
+    <img src="https://via.placeholder.com/150" />
+</template>
 
 <style></style>
 
