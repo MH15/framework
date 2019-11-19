@@ -30,6 +30,8 @@ const mimeType = {
     '.ttf': 'aplication/font-sfnt'
 };
 
+const ejs = require("ejs")
+const utils = require("../utils")
 let server;
 
 function restart(type, name) {
@@ -65,22 +67,35 @@ function start(type, name) {
 
             // if is a directory, then look for index.html
             if (fs.statSync(pathname).isDirectory()) {
+                // pathname += '/index.html';
+                // pathname = path.join(__dirname, "../..", "_framework");
                 pathname += '/index.html';
+                let developPath = path.join(__dirname, "..", "defaults", "develop.ejs")
+                console.log("BIT " + developPath)
+                let developHTML = ejs.render(utils.readFile(developPath), {
+                    name: name,
+                    type: type,
+                    source: "/temp.html"
+                })
+                res.setHeader('Content-type', mimeType[".html"] || 'text/plain');
+                res.end(developHTML);
+            } else {
+                // read file from file system
+                fs.readFile(pathname, function (err, data) {
+                    if (err) {
+                        res.statusCode = 500;
+                        res.end(`Error getting the file: ${err}.`);
+                    } else {
+                        // based on the URL path, extract the file extention. e.g. .js, .doc, ...
+                        const ext = path.parse(pathname).ext;
+                        // if the file is found, set Content-type and send data
+                        res.setHeader('Content-type', mimeType[ext] || 'text/plain');
+                        res.end(data);
+                    }
+                });
             }
 
-            // read file from file system
-            fs.readFile(pathname, function (err, data) {
-                if (err) {
-                    res.statusCode = 500;
-                    res.end(`Error getting the file: ${err}.`);
-                } else {
-                    // based on the URL path, extract the file extention. e.g. .js, .doc, ...
-                    const ext = path.parse(pathname).ext;
-                    // if the file is found, set Content-type and send data
-                    res.setHeader('Content-type', mimeType[ext] || 'text/plain');
-                    res.end(data);
-                }
-            });
+
         });
 
 

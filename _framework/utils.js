@@ -28,45 +28,28 @@ function ejsFancy(filepath, template) {
     ejs.fileLoader = fileLoader
     console.log("ejs file: " + filepath)
     let raw = readFile(filepath)
-    // let html = ejs.render(raw, {});
-    // console.log("yer")
-    // console.log(html)
-    // let s = raw.replace(/<%-(.*?)%>/g, (capturingGroup) => {
-    //     let captured = capturingGroup.replace(/\s/g, '').match(/['"](.*?)['"]/g)[0].replace(/['"']/g, "")
-    //     // console.log("captured: " + captured)
-    //     let resolved = resolveComponentReferences(captured)
-    //     // console.log("resolved: " + resolved)
-    //     let final = capturingGroup.replace(/['"](.*?)['"]/, "'" + resolved + "'")
-    //     return final
-    // })
 
-
-    // let html = ejs.render(s, { user: "bitch" })\
-
-    // let testString = raw
-    // let fn = ejs.compile(testString, { client: true });
-
-    // let html = fn({ user: "bitch" }, null, function (p, d) { // include callback
-    //     // path -> 'file'
-    //     // d -> {person: 'John'}
-    //     // Put your code here
-    //     // Return the contents of file as a string
-    //     let truePath = path.join(__dirname, "..", findCompiledComponent(p))
-    //     console.log("path: " + truePath)
-    //     return readFile(truePath)
-    // }); // returns rendered string
-    let html = eee(raw);
+    // Render the site
+    let html = nestedEJS(raw);
 
     console.log(html)
-    overwriteFile(path.parse(filepath).dir + "/index.html", html)
+    overwriteFile(path.parse(filepath).dir + "/temp.html", html)
+
+    // Render the develop workspace
+    // let develop = ejs.render(readFile("_framework/develop.ejs"), {
+
+    // })
+    // overwriteFile(path.parse(filepath).dir + "/index.html", html)
 }
 
 
-function eee(raw) {
+function nestedEJS(raw, u) {
+    let data = u || { user: u || "default" }
     let m = ejs.compile(raw, { client: true })
-    return m({ user: "bitch" }, null, function (p, d) {
+    return m(data, null, function (p, d) {
         let truePath = path.join(__dirname, "..", findCompiledComponent(p))
-        return eee(readFile(truePath))
+        console.log(`Data for '${p}': ${JSON.stringify(d)}`)
+        return nestedEJS(readFile(truePath), d)
     })
 }
 

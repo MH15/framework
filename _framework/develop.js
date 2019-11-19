@@ -70,6 +70,7 @@ function compileStyles(style) {
             // TODO: implement less
             break
         default:
+            styleResult = style.innerHTML
             break
     }
     return styleResult
@@ -119,5 +120,5 @@ function builder(pathToItem, name, type) {
 
 
     // EJS the whol cowabunga
-    utils.ejsFancy(path.join(buildPath, "index.ejs"), template)
+    utils.ejsFancy(path.join(buildPath, "index.ejs"), { user: "dog" })
 }

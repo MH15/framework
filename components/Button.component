@@ -1,4 +1,6 @@
-<template><button>Button</button></template>
+<template>
+    <button><%= user %></button>
+</template>
 
 <style lang="sass">
     body {

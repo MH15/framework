@@ -3,8 +3,9 @@
         <i>able to <b>effectively</b> deep-dive</i> organic growths in your business? So we can hit the ground running,
         we will be proactively transforming every game changer in our space. Efficiencies will come from dynamically
         right-sizing our visibilities.</p>
+    <h2><%= user %></h2>
     <%- include("Button", {user: user}); %>
-    <%- include('ProfilePicture', {user: user}); %>
+    <%- include('ProfilePicture', {user: "cat"}); %>
 </template>
 
 <style>
