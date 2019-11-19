@@ -1,5 +1,9 @@
-<template>
-    <img src="https://via.placeholder.com/150" />
+<template include="Button,Header">
+    <div>
+        <img src="https://via.placeholder.com/150" />
+        <%- include("Header"); %>
+        <%- include("Button"); %>
+    </div>
 </template>
 
 <style></style>

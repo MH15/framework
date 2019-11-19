@@ -43,21 +43,31 @@ function ejsFancy(filepath, template) {
 
     // let html = ejs.render(s, { user: "bitch" })\
 
-    let testString = raw, fn = ejs.compile(testString, { client: true });
+    // let testString = raw
+    // let fn = ejs.compile(testString, { client: true });
 
-    let html = fn({ user: "bitch" }, null, function (p, d) { // include callback
-        // path -> 'file'
-        // d -> {person: 'John'}
-        // Put your code here
-        // Return the contents of file as a string
-        console.log("d: " + d)
-        let truePath = path.join(__dirname, "..", findCompiledComponent(p))
-        console.log("path: " + truePath)
-        return readFile(truePath)
-    }); // returns rendered string
+    // let html = fn({ user: "bitch" }, null, function (p, d) { // include callback
+    //     // path -> 'file'
+    //     // d -> {person: 'John'}
+    //     // Put your code here
+    //     // Return the contents of file as a string
+    //     let truePath = path.join(__dirname, "..", findCompiledComponent(p))
+    //     console.log("path: " + truePath)
+    //     return readFile(truePath)
+    // }); // returns rendered string
+    let html = eee(raw);
 
     console.log(html)
-    writeFile(path.parse(filepath).dir + "/index.html", html)
+    overwriteFile(path.parse(filepath).dir + "/index.html", html)
+}
+
+
+function eee(raw) {
+    let m = ejs.compile(raw, { client: true })
+    return m({ user: "bitch" }, null, function (p, d) {
+        let truePath = path.join(__dirname, "..", findCompiledComponent(p))
+        return eee(readFile(truePath))
+    })
 }
 
 

@@ -8,7 +8,7 @@
  * - serve through the live server
  */
 const utils = require('./utils')
-const server = require('./live-server')
+const server = require('.//server/live-server')
 const build = require('../config/build')
 const sass = require('node-sass')
 const ejs = require('ejs')
@@ -16,6 +16,7 @@ const path = require('path')
 const Dialogs = {
     Error: (type) => `Cannot run the live server on an item of type '${type}'.`,
     UnsupportedStyleLang: (lang) => `'${lang}' is not a supported style processor.`,
+    BuildingComponent: (name) => `Building '${name}'.`
 }
 const fs = require('fs')
 module.exports = (argv) => {
@@ -104,6 +105,17 @@ function builder(pathToItem, name, type) {
     utils.overwriteFile(path.join(buildPath, "style.css"), styleResult)
     utils.overwriteFile(path.join(buildPath, "script.js"), script.innerHTML)
 
+
+    // Build all referenced components
+    let r = template.getAttribute("include")
+    if (r) {
+        let referencedComponents = template.getAttribute("include").split(",")
+        referencedComponents.forEach(name => {
+            console.log(Dialogs.BuildingComponent(name))
+            let refPath = path.join("components", name + ".component")
+            builder(refPath, name, "components")
+        })
+    }
 
 
     // EJS the whol cowabunga

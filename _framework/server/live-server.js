@@ -50,7 +50,7 @@ function start(type, name) {
         // e.g curl --path-as-is http://localhost:9000/../fileInDanger.txt
         // by limiting the path to current directory only
         const sanitizePath = path.normalize(parsedUrl.pathname).replace(/^(\.\.[\/\\])+/, '');
-        let pathname = path.join(__dirname, "..", "_build", type, name, sanitizePath);
+        let pathname = path.join(__dirname, "../..", "_build", type, name, sanitizePath);
 
         fs.exists(pathname, function (exist) {
             if (!exist) {
