@@ -1,0 +1,32 @@
+[
+    {
+        "method": "GET",
+        "path": "/restaurants",
+        "controller": "Restaurant.find",
+        "config": {
+            "policies": []
+        }
+    },
+    {
+        "method": [
+            "POST",
+            "PUT"
+        ],
+        "path": "/restaurants/:id",
+        "controller": "Restaurant.createOrUpdate",
+        "config": {
+            "policies": []
+        }
+    },
+    {
+        "method": "POST",
+        "path": "/restaurants/:id/reservation",
+        "controller": "Restaurant.reservation",
+        "config": {
+            "policies": [
+                "isAuthenticated",
+                "hasCreditCard"
+            ]
+        }
+    }
+]

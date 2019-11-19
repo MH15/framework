@@ -1,0 +1,15 @@
+<template>
+    <div>Title</div>
+</template>
+
+<style lang="sass">
+    body {
+        background: gold;
+        color: black;
+        font-size: 14px;
+    }
+</style>
+
+<script>
+    alert("bitch")
+</script>

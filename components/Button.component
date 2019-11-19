@@ -1,0 +1,9 @@
+<template><button>Button</button></template>
+
+<style lang="sass">
+    body {
+        background: green;
+    }
+</style>
+
+<script></script>
