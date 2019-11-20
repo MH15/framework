@@ -11,10 +11,30 @@
     <p>Your <%= type %> is displayed below</p>
 
     <div id="develop">
-        <iframe src="<%= source %>" id="viewport"></iframe>
+        <iframe style="resize: both; width: 600px; height: 500px;" src="<%= source %>" id="viewport"></iframe>
 
     </div>
 
 </body>
+
+<script>
+    let iframe = document.querySelector("iframe#viewport")
+
+    const url = 'ws://localhost:8081'
+    const socket = new WebSocket(url)
+    // Connection opened
+    socket.addEventListener('open', function (event) {
+        socket.send('Hello Server!');
+    });
+
+    // Listen for messages
+    socket.addEventListener('message', function (event) {
+        console.log('Message from server ', event.data);
+        if (event.data === "reload") {
+            iframe.contentWindow.location += ""
+            console.log(iframe.contentWindow.location)
+        }
+    });
+</script>
 
 </html>

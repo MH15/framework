@@ -1,5 +1,6 @@
-<template>
-    <div>Title</div>
+<template include="Card">
+    <h1>Julia</h1>
+    <%- include("Card",{user: "Fool"}) %>
 </template>
 
 <style lang="sass">

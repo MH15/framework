@@ -30,15 +30,19 @@ const mimeType = {
     '.ttf': 'aplication/font-sfnt'
 };
 
+console.log("DO ITasjklcbaslkjcbnjkasdndcjlkasdncj")
+
 const ejs = require("ejs")
 const utils = require("../utils")
 let server;
+let wss;
 
 function restart(type, name) {
     // console.log("Closing server.")
-    server.close()
+    // server.close()
     console.log("Restarting server.")
-    start(type, name)
+    wss.send('reload')
+    // start(type, name)
 }
 
 function start(type, name) {
@@ -99,10 +103,25 @@ function start(type, name) {
         });
 
 
-    }).listen(parseInt(port));
+    })
 
     console.log(`Server listening on port ${port}`);
+
+    const WebSocket = require('ws')
+    let socket = new WebSocket.Server({ server });
+
+    socket.on('connection', ws => {
+        wss = ws
+        ws.on('message', message => {
+            console.log(`Received message => ${message}`)
+        })
+        ws.send('ho!')
+    })
+
+    server.listen(parseInt(port));
 }
+
+
 
 
 

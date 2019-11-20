@@ -26,13 +26,13 @@ function fileLoader(filepath) {
 
 function ejsFancy(filepath, template) {
     ejs.fileLoader = fileLoader
-    console.log("ejs file: " + filepath)
+    // console.log("ejs file: " + filepath)
     let raw = readFile(filepath)
 
     // Render the site
     let html = nestedEJS(raw);
 
-    console.log(html)
+    // console.log(html)
     overwriteFile(path.parse(filepath).dir + "/temp.html", html)
 
     // Render the develop workspace
@@ -48,7 +48,7 @@ function nestedEJS(raw, u) {
     let m = ejs.compile(raw, { client: true })
     return m(data, null, function (p, d) {
         let truePath = path.join(__dirname, "..", findCompiledComponent(p))
-        console.log(`Data for '${p}': ${JSON.stringify(d)}`)
+        // console.log(`Data for '${p}': ${JSON.stringify(d)}`)
         return nestedEJS(readFile(truePath), d)
     })
 }
